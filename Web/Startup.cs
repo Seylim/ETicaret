@@ -1,4 +1,9 @@
+using Business.Abstract;
+using Business.Concrete;
+using Business.MapperProfile;
 using DataAccess.Data;
+using DataAccess.Repositories.Abstract;
+using DataAccess.Repositories.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,8 +32,15 @@ namespace Web
         {
             services.AddControllersWithViews();
 
+            services.AddScoped<IProductRepository, EfProductRepository>();
+            services.AddScoped<ICategoryRepository, EfCategoryRepository>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
             var connectionString = Configuration.GetConnectionString("db");
             services.AddDbContext<ETicaretContext>(opt => opt.UseSqlServer(connectionString));
+
+            services.AddAutoMapper(typeof(MapProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
